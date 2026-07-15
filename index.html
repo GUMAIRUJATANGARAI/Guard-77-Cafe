@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>77 CAFE — ตารางเวรยาม</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #150f0c;
+    --bg-panel: #1e1712;
+    --bg-panel-2: #241b15;
+    --gold: #e8a33d;
+    --gold-soft: #f6cf8a;
+    --wine: #8a2a3d;
+    --wine-soft: #c65a6e;
+    --teal: #3f7b76;
+    --teal-soft: #7fb8b1;
+    --cream: #f2e8d5;
+    --muted: #a89684;
+    --line: #3a2c22;
+    --shadow: rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  body{
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(232,163,61,0.08), transparent 60%),
+      var(--bg);
+    color:var(--cream);
+    font-family:'Manrope', sans-serif;
+    min-height:100vh;
+    padding:32px 16px 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+  }
+
+  /* ---------- Marquee header ---------- */
+  .marquee{
+    position:relative;
+    background: linear-gradient(180deg, var(--bg-panel-2), var(--bg-panel));
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px 20px 26px;
+    text-align:center;
+    overflow:hidden;
+    box-shadow: 0 20px 50px var(--shadow);
+  }
+
+  .bulb-row{
+    display:flex;
+    justify-content:space-evenly;
+    padding:0 6px;
+  }
+  .bulb{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 6px 1px rgba(232,163,61,0.7);
+    animation: twinkle 2.6s ease-in-out infinite;
+  }
+  .bulb-row.bottom .bulb{ background:var(--wine); box-shadow:0 0 6px 1px rgba(138,42,61,0.7); }
+
+  @keyframes twinkle{
+    0%, 100%{ opacity:0.35; }
+    50%{ opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .bulb{ animation:none; opacity:0.8; }
+    .neon-title{ animation:none !important; }
+  }
+
+  .neon-title{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:clamp(48px, 12vw, 84px);
+    letter-spacing:6px;
+    color: var(--gold-soft);
+    text-shadow:
+      0 0 6px rgba(246,207,138,0.9),
+      0 0 18px rgba(232,163,61,0.6),
+      0 0 40px rgba(232,163,61,0.35);
+    margin:8px 0 2px;
+    line-height:1;
+    animation: flicker 6s linear infinite;
+  }
+  @keyframes flicker{
+    0%,19%,21%,23%,55%,57%,100%{ opacity:1; }
+    20%,22%,56%{ opacity:0.82; }
+  }
+
+  .subtitle{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:2px;
+    font-size:13px;
+    color:var(--muted);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .live-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--wine-soft);
+    box-shadow:0 0 6px 2px rgba(198,90,110,0.8);
+    animation: twinkle 1.8s ease-in-out infinite;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin:22px 0 8px;
+    flex-wrap:wrap;
+  }
+  .month-nav{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:8px 16px;
+  }
+  .month-label{
+    font-family:'Bebas Neue', sans-serif;
+    letter-spacing:2px;
+    font-size:22px;
+    color:var(--cream);
+    min-width:190px;
+    text-align:center;
+  }
+  .icon-btn{
+    background:none;
+    border:none;
+    color:var(--gold-soft);
+    font-size:20px;
+    cursor:pointer;
+    width:32px;height:32px;
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background 0.15s;
+  }
+  .icon-btn:hover{ background:rgba(232,163,61,0.12); }
+  .icon-btn:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
+    outline:2px solid var(--gold-soft);
+    outline-offset:2px;
+  }
+
+  .right-controls{ display:flex; gap:8px; }
+  .ghost-btn{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    color:var(--muted);
+    font-family:'Manrope';
+    font-size:13px;
+    font-weight:600;
+    padding:9px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .ghost-btn:hover{ border-color:var(--gold); color:var(--gold-soft); }
+
+  /* ---------- Legend ---------- */
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin:14px 2px 20px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .legend-item{ display:flex; align-items:center; gap:7px; }
+  .dot{ width:10px;height:10px;border-radius:3px; }
+  .dot.core-0{ background:var(--gold); }
+  .dot.core-1{ background:var(--teal); }
+  .dot.core-2{ background:var(--wine); }
+  .dot.sub{ background:transparent; border:1.5px dashed var(--muted); }
+
+  /* ---------- Monthly summary ---------- */
+  .summary-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:0 2px 18px;
+  }
+  .summary-chip{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:8px 12px;
+    font-size:13px;
+  }
+  .summary-chip .dot{ width:9px; height:9px; flex-shrink:0; }
+  .summary-chip .s-name{ color:var(--cream); font-weight:600; }
+  .summary-chip .s-count{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--muted);
+    font-size:12px;
+  }
+  .summary-chip .s-count b{ color:var(--gold-soft); font-size:14px; }
+
+  /* ---------- Calendar ---------- */
+  .weekday-row{
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .weekday{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:1px;
+    color:var(--muted);
+    padding:7px 0;
+    border-radius:8px;
+    background:rgba(232,163,61,0.07);
+    border:1px solid rgba(232,163,61,0.12);
+  }
+  .weekday.weekend{
+    background:rgba(198,90,110,0.14);
+    border-color:rgba(198,90,110,0.22);
+    color:var(--wine-soft);
+    font-weight:700;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:8px;
+  }
+
+  .cell{
+    position:relative;
+    min-height:92px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 8px 8px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    cursor:pointer;
+    overflow:hidden;
+    transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+  }
+  .cell::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:4px;
+  }
+  .cell.strip-core-0::before{ background:var(--gold); }
+  .cell.strip-core-1::before{ background:var(--teal); }
+  .cell.strip-core-2::before{ background:var(--wine); }
+  .cell.strip-sub::before{ background:var(--muted); opacity:0.7; }
+  .cell.weekend{ background:linear-gradient(180deg, rgba(198,90,110,0.06), var(--bg-panel) 60%); }
+  .cell.blank{
+    background:transparent;
+    border-color:transparent;
+    cursor:default;
+  }
+  .cell.filled:hover, .cell.empty:hover{
+    transform:translateY(-2px);
+    border-color:var(--gold);
+    box-shadow:0 8px 22px rgba(0,0,0,0.4);
+  }
+  .cell.today{ border-color:var(--gold-soft); box-shadow:0 0 0 1px rgba(246,207,138,0.25); }
+
+  .day-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .cell.today .day-num{ color:var(--gold-soft); font-weight:700; }
+
+  .chip{
+    font-size:13px;
+    font-weight:700;
+    padding:5px 8px;
+    border-radius:8px;
+    text-align:center;
+    line-height:1.25;
+    word-break:break-word;
+  }
+  .chip.core-0{ background:rgba(232,163,61,0.18); color:var(--gold-soft); }
+  .chip.core-1{ background:rgba(63,123,118,0.22); color:var(--teal-soft); }
+  .chip.core-2{ background:rgba(138,42,61,0.22); color:var(--wine-soft); }
+  .chip.sub{ background:rgba(168,150,132,0.12); color:var(--cream); border:1px dashed var(--muted); }
+
+  .empty-label{
+    font-size:12px;
+    color:var(--muted);
+    opacity:0.6;
+    text-align:center;
+  }
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(10,7,5,0.72);
+    display:none;
+    align-items:center; justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .overlay.show{ display:flex; }
+
+  .modal{
+    background:var(--bg-panel-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px;
+    width:100%;
+    max-width:380px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.6);
+    transform:scale(0.96) translateY(6px);
+    opacity:0;
+    transition: transform 0.16s ease, opacity 0.16s ease;
+  }
+  .overlay.show .modal{
+    transform:scale(1) translateY(0);
+    opacity:1;
+  }
+  .modal h3{
+    font-family:'Bebas Neue', sans-serif;
+    letter-spacing:2px;
+    font-size:24px;
+    color:var(--gold-soft);
+    margin:0 0 2px;
+  }
+  .modal .shift-time{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:16px;
+  }
+
+  .radio-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+  .radio-opt{
+    display:flex; align-items:center; gap:10px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    cursor:pointer;
+  }
+  .radio-opt input{ accent-color:var(--gold); width:16px;height:16px; }
+  .radio-opt span{ font-size:14px; font-weight:600; }
+
+  .other-input{
+    width:100%;
+    margin-top:8px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    color:var(--cream);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:'Manrope';
+    font-size:14px;
+    display:none;
+  }
+  .other-input.show{ display:block; }
+
+  .note-label{
+    font-size:12px;
+    color:var(--muted);
+    font-family:'IBM Plex Mono', monospace;
+    margin:14px 0 6px;
+    display:block;
+  }
+  .note-input{
+    width:100%;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    color:var(--cream);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:'Manrope';
+    font-size:13px;
+    resize:vertical;
+    min-height:60px;
+  }
+
+  .note-flag{
+    font-size:11px;
+    color:var(--gold-soft);
+    opacity:0.85;
+    text-align:center;
+    margin-top:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .modal-actions{
+    display:flex; gap:8px; margin-top:18px;
+  }
+  .btn{
+    flex:1;
+    padding:11px;
+    border-radius:10px;
+    border:none;
+    font-family:'Manrope';
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .btn-save{ background:var(--gold); color:#1c1408; }
+  .btn-save:hover{ background:var(--gold-soft); }
+  .btn-clear{ background:transparent; color:var(--wine-soft); border:1px solid var(--wine-soft); }
+  .btn-clear:hover{ background:rgba(138,42,61,0.15); }
+  .btn-cancel{ background:transparent; color:var(--muted); border:1px solid var(--line); }
+  .btn-cancel:hover{ color:var(--cream); border-color:var(--muted); }
+
+  .settings-grid{ display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
+  .settings-grid label{ font-size:12px; color:var(--muted); font-family:'IBM Plex Mono', monospace; }
+  .settings-grid input{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    color:var(--cream);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:'Manrope';
+    font-size:14px;
+    margin-top:4px;
+  }
+
+  .loading-msg{
+    text-align:center;
+    color:var(--muted);
+    padding:40px 0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+  }
+
+  .footnote{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:22px;
+    opacity:0.7;
+  }
+
+  @media (max-width:560px){
+    .cell{ min-height:74px; padding:6px; }
+    .chip, .empty-label{ font-size:11px; }
+    .month-label{ font-size:18px; min-width:150px; }
+    .neon-title{ letter-spacing:3px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="marquee">
+    <div class="bulb-row top" id="bulbTop"></div>
+    <div class="neon-title">77 CAFE</div>
+    <div class="subtitle"><span class="live-dot"></span> ตารางเวรยาม &nbsp;19:00 – 01:00&nbsp; น. <span class="live-dot"></span></div>
+    <div class="bulb-row bottom" id="bulbBottom"></div>
+  </div>
+
+  <div class="controls">
+    <div class="month-nav">
+      <button class="icon-btn" id="prevBtn" aria-label="เดือนก่อนหน้า">‹</button>
+      <div class="month-label" id="monthLabel">—</div>
+      <button class="icon-btn" id="nextBtn" aria-label="เดือนถัดไป">›</button>
+    </div>
+    <div class="right-controls">
+      <button class="ghost-btn" id="refreshBtn">⟳ รีเฟรช</button>
+      <button class="ghost-btn" id="settingsBtn">⚙ ตั้งชื่อคนหลัก</button>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="summary-row" id="summaryRow"></div>
+
+  <div class="weekday-row">
+    <div class="weekday">จ</div><div class="weekday">อ</div><div class="weekday">พ</div>
+    <div class="weekday">พฤ</div><div class="weekday">ศ</div><div class="weekday weekend">ส</div><div class="weekday weekend">อา</div>
+  </div>
+
+  <div id="calendarArea">
+    <div class="loading-msg">กำลังโหลดตาราง…</div>
+  </div>
+
+  <div class="footnote">ทุกคนที่เปิดหน้านี้เห็นและแก้ตารางเดียวกัน — ข้อมูลถูกบันทึกไว้ให้ทุกคน</div>
+
+</div>
+
+<!-- Day edit modal -->
+<div class="overlay" id="dayOverlay">
+  <div class="modal">
+    <h3 id="modalDateTitle">วันที่</h3>
+    <div class="shift-time">กะเวร 19:00 – 01:00 น.</div>
+    <div class="radio-list" id="radioList"></div>
+    <input type="text" class="other-input" id="otherInput" placeholder="พิมพ์ชื่อคนที่เข้าแทน">
+    <label class="note-label" for="noteInput">โน้ต (ไม่บังคับ)</label>
+    <textarea class="note-input" id="noteInput" placeholder="เช่น มาสาย, ลากลับก่อน, ของที่ต้องเตรียม..."></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-clear" id="clearBtn">ลบ</button>
+      <button class="btn btn-cancel" id="cancelBtn">ยกเลิก</button>
+      <button class="btn btn-save" id="saveBtn">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal">
+    <h3>ตั้งชื่อคนหลัก</h3>
+    <div class="shift-time">3 คนที่วนเข้าเวรเป็นประจำ</div>
+    <div class="settings-grid">
+      <div>
+        <label>คนหลักคนที่ 1</label>
+        <input type="text" id="coreInput0">
+      </div>
+      <div>
+        <label>คนหลักคนที่ 2</label>
+        <input type="text" id="coreInput1">
+      </div>
+      <div>
+        <label>คนหลักคนที่ 3</label>
+        <input type="text" id="coreInput2">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" id="settingsCancelBtn">ยกเลิก</button>
+      <button class="btn btn-save" id="settingsSaveBtn">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== ตั้งค่า JSONBin.io =====
+  // 1. สมัครที่ https://jsonbin.io แล้วสร้าง Bin ใหม่
+  // 2. เอา Bin ID และ X-Master-Key มาใส่ตรงนี้แทนข้อความตัวอย่าง
+  const JSONBIN_ID  = '6a5608bbf5f4af5e298cc54c';
+  const JSONBIN_KEY = '$2a$10$cUosUX7zvC4gZoOlut8E8uxt185UEHOE3Ud4Ok6Q4/3EovV18w3zO';
+  const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+  // ================================
+
+  const shiftKey = (y, m) => `${y}-${String(m+1).padStart(2,'0')}`;
+
+  let appData = { coreNames: ['เปา', 'บอล', 'ม่อน'], shifts: {} };
+  let coreNames = appData.coreNames;
+  const today = new Date();
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth();
+  let shifts = {};
+  let selectedDay = null;
+  let selectedChoice = null; // core-0 / core-1 / core-2 / other
+
+  async function fetchAppData(){
+    const res = await fetch(`${JSONBIN_URL}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_KEY }
+    });
+    if(!res.ok) throw new Error('โหลดข้อมูลไม่สำเร็จ');
+    const json = await res.json();
+    return json.record || { coreNames: ['เปา','บอล','ม่อน'], shifts: {} };
+  }
+
+  async function pushAppData(){
+    const res = await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+      body: JSON.stringify(appData)
+    });
+    if(!res.ok) throw new Error('บันทึกไม่สำเร็จ');
+  }
+
+  const thaiMonths = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+  function buildBulbs(){
+    ['bulbTop','bulbBottom'].forEach(id=>{
+      const row = document.getElementById(id);
+      row.innerHTML = '';
+      for(let i=0;i<18;i++){
+        const b = document.createElement('div');
+        b.className = 'bulb';
+        b.style.animationDelay = (i*0.12)+'s';
+        row.appendChild(b);
+      }
+    });
+  }
+
+  async function loadCoreNames(){
+    try{
+      appData = await fetchAppData();
+      if(Array.isArray(appData.coreNames) && appData.coreNames.length===3){
+        coreNames = appData.coreNames;
+      } else {
+        appData.coreNames = coreNames;
+      }
+      if(!appData.shifts) appData.shifts = {};
+    }catch(e){
+      alert('เชื่อมต่อฐานข้อมูลไม่สำเร็จ ตรวจสอบ Bin ID / Key หรืออินเทอร์เน็ต');
+    }
+  }
+
+  async function saveCoreNames(names){
+    coreNames = names;
+    appData.coreNames = names;
+    try{ await pushAppData(); }
+    catch(e){ alert('บันทึกชื่อไม่สำเร็จ ลองใหม่อีกครั้ง'); }
+  }
+
+  async function loadShifts(){
+    try{
+      appData = await fetchAppData();
+      if(!appData.shifts) appData.shifts = {};
+      shifts = appData.shifts[shiftKey(viewYear, viewMonth)] || {};
+    }catch(e){
+      shifts = {};
+      alert('โหลดตารางไม่สำเร็จ ตรวจสอบ Bin ID / Key หรืออินเทอร์เน็ต');
+    }
+  }
+
+  async function saveShifts(){
+    if(!appData.shifts) appData.shifts = {};
+    appData.shifts[shiftKey(viewYear, viewMonth)] = shifts;
+    try{ await pushAppData(); }
+    catch(e){ alert('บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง'); }
+  }
+
+  function renderLegend(){
+    const legend = document.getElementById('legend');
+    legend.innerHTML = coreNames.map((n,i)=>`
+      <div class="legend-item"><span class="dot core-${i}"></span>${escapeHtml(n)}</div>
+    `).join('') + `<div class="legend-item"><span class="dot sub"></span>คนแทน</div>`;
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  const PAY_PER_SHIFT = 500; // บาทต่อ 1 เวร — แก้เลขนี้ได้ถ้าค่าเวรเปลี่ยน
+
+  function renderSummary(daysInMonth){
+    const counts = {}; // name -> count
+    coreNames.forEach(n=> counts[n] = 0);
+    let subCount = 0;
+
+    for(let day=1; day<=daysInMonth; day++){
+      const entry = getEntry(day);
+      if(!entry || !entry.name) continue;
+      if(coreNames.includes(entry.name)){
+        counts[entry.name]++;
+      } else {
+        subCount++;
+      }
+    }
+
+    const box = document.getElementById('summaryRow');
+    const fmt = n => n.toLocaleString('th-TH');
+    let html = coreNames.map((n,i)=>`
+      <div class="summary-chip">
+        <span class="dot core-${i}"></span>
+        <span class="s-name">${escapeHtml(n)}</span>
+        <span class="s-count"><b>${counts[n]}</b> เวร · <b>${fmt(counts[n]*PAY_PER_SHIFT)}</b> บาท</span>
+      </div>
+    `).join('');
+    if(subCount>0){
+      html += `
+      <div class="summary-chip">
+        <span class="dot sub"></span>
+        <span class="s-name">คนแทน</span>
+        <span class="s-count"><b>${subCount}</b> เวร · <b>${fmt(subCount*PAY_PER_SHIFT)}</b> บาท</span>
+      </div>`;
+    }
+    box.innerHTML = html;
+  }
+
+  function chipClassFor(name){
+    const idx = coreNames.indexOf(name);
+    return idx >= 0 ? `core-${idx}` : 'sub';
+  }
+
+  // รองรับข้อมูลเก่าที่เก็บเป็น string ธรรมดา (ยังไม่มีโน้ต) ให้แปลงเป็น {name, note}
+  function getEntry(day){
+    const v = shifts[day];
+    if(!v) return null;
+    if(typeof v === 'string') return { name: v, note: '' };
+    return { name: v.name || '', note: v.note || '' };
+  }
+
+  async function renderCalendar(){
+    document.getElementById('monthLabel').textContent = `${thaiMonths[viewMonth]} ${viewYear+543}`;
+    const area = document.getElementById('calendarArea');
+    area.innerHTML = '<div class="loading-msg">กำลังโหลดตาราง…</div>';
+
+    await loadShifts();
+
+    const firstDay = new Date(viewYear, viewMonth, 1).getDay(); // 0=Sun
+    const leading = (firstDay + 6) % 7; // Monday-start offset
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+
+    renderSummary(daysInMonth);
+
+    const isCurrentMonth = (viewYear===today.getFullYear() && viewMonth===today.getMonth());
+
+    let html = '<div class="grid">';
+    for(let i=0;i<leading;i++){
+      html += '<div class="cell blank"></div>';
+    }
+    for(let day=1; day<=daysInMonth; day++){
+      const entry = getEntry(day);
+      const name = entry ? entry.name : '';
+      const isToday = isCurrentMonth && day===today.getDate();
+      const dowIdx = (leading + (day-1)) % 7; // 0=Mon ... 5=Sat, 6=Sun
+      const isWeekend = dowIdx===5 || dowIdx===6;
+      const stripClass = name ? `strip-${chipClassFor(name)}` : '';
+      html += `<div class="cell ${name?'filled':'empty'} ${isToday?'today':''} ${isWeekend?'weekend':''} ${stripClass}" data-day="${day}">
+        <div class="day-num">${day}</div>
+        ${ name
+          ? `<div class="chip ${chipClassFor(name)}">${escapeHtml(name)}</div>`
+          : `<div class="empty-label">ว่าง</div>` }
+        ${ entry && entry.note ? `<div class="note-flag">📝 ${escapeHtml(entry.note)}</div>` : '' }
+      </div>`;
+    }
+    html += '</div>';
+    area.innerHTML = html;
+
+    area.querySelectorAll('.cell:not(.blank)').forEach(cell=>{
+      cell.addEventListener('click', ()=> openDayModal(parseInt(cell.dataset.day,10)));
+    });
+  }
+
+  function openDayModal(day){
+    selectedDay = day;
+    const entry = getEntry(day);
+    const current = entry ? entry.name : '';
+    document.getElementById('modalDateTitle').textContent =
+      `วันที่ ${day} ${thaiMonths[viewMonth]} ${viewYear+543}`;
+    document.getElementById('noteInput').value = entry ? entry.note : '';
+
+    const radioList = document.getElementById('radioList');
+    radioList.innerHTML = coreNames.map((n,i)=>`
+      <label class="radio-opt">
+        <input type="radio" name="dayChoice" value="core-${i}">
+        <span>${escapeHtml(n)}</span>
+      </label>
+    `).join('') + `
+      <label class="radio-opt">
+        <input type="radio" name="dayChoice" value="other">
+        <span>คนอื่น (พิมพ์ชื่อ)</span>
+      </label>
+    `;
+
+    const otherInput = document.getElementById('otherInput');
+    otherInput.value = '';
+    otherInput.classList.remove('show');
+
+    const idx = coreNames.indexOf(current);
+    const radios = radioList.querySelectorAll('input[name="dayChoice"]');
+    if(current && idx>=0){
+      radios[idx].checked = true;
+    } else if(current){
+      radios[radios.length-1].checked = true;
+      otherInput.value = current;
+      otherInput.classList.add('show');
+    }
+
+    radios.forEach(r=>{
+      r.addEventListener('change', ()=>{
+        if(r.value==='other' && r.checked){
+          otherInput.classList.add('show');
+          otherInput.focus();
+        } else if(r.checked){
+          otherInput.classList.remove('show');
+        }
+      });
+    });
+
+    document.getElementById('dayOverlay').classList.add('show');
+  }
+
+  function closeDayModal(){
+    document.getElementById('dayOverlay').classList.remove('show');
+    selectedDay = null;
+  }
+
+  async function handleSave(){
+    const checked = document.querySelector('input[name="dayChoice"]:checked');
+    if(!checked){
+      alert('กรุณาเลือกชื่อคนเข้าเวร');
+      return;
+    }
+    let name = '';
+    if(checked.value==='other'){
+      name = document.getElementById('otherInput').value.trim();
+      if(!name){
+        alert('กรุณาพิมพ์ชื่อคนที่เข้าแทน');
+        return;
+      }
+    } else {
+      const idx = parseInt(checked.value.split('-')[1],10);
+      name = coreNames[idx];
+    }
+    const note = document.getElementById('noteInput').value.trim();
+    shifts[selectedDay] = { name, note };
+    await saveShifts();
+    closeDayModal();
+    renderCalendar();
+  }
+
+  async function handleClear(){
+    delete shifts[selectedDay];
+    await saveShifts();
+    closeDayModal();
+    renderCalendar();
+  }
+
+  function openSettings(){
+    document.getElementById('coreInput0').value = coreNames[0];
+    document.getElementById('coreInput1').value = coreNames[1];
+    document.getElementById('coreInput2').value = coreNames[2];
+    document.getElementById('settingsOverlay').classList.add('show');
+  }
+  function closeSettings(){
+    document.getElementById('settingsOverlay').classList.remove('show');
+  }
+  async function handleSettingsSave(){
+    const names = [
+      document.getElementById('coreInput0').value.trim(),
+      document.getElementById('coreInput1').value.trim(),
+      document.getElementById('coreInput2').value.trim()
+    ];
+    if(names.some(n=>!n)){
+      alert('กรุณากรอกชื่อให้ครบทั้ง 3 คน');
+      return;
+    }
+    await saveCoreNames(names);
+    renderLegend();
+    closeSettings();
+    renderCalendar();
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', ()=>{
+    viewMonth--;
+    if(viewMonth<0){ viewMonth=11; viewYear--; }
+    renderCalendar();
+  });
+  document.getElementById('nextBtn').addEventListener('click', ()=>{
+    viewMonth++;
+    if(viewMonth>11){ viewMonth=0; viewYear++; }
+    renderCalendar();
+  });
+  document.getElementById('refreshBtn').addEventListener('click', renderCalendar);
+  document.getElementById('settingsBtn').addEventListener('click', openSettings);
+  document.getElementById('settingsCancelBtn').addEventListener('click', closeSettings);
+  document.getElementById('settingsSaveBtn').addEventListener('click', handleSettingsSave);
+  document.getElementById('saveBtn').addEventListener('click', handleSave);
+  document.getElementById('clearBtn').addEventListener('click', handleClear);
+  document.getElementById('cancelBtn').addEventListener('click', closeDayModal);
+  document.getElementById('dayOverlay').addEventListener('click', (e)=>{ if(e.target.id==='dayOverlay') closeDayModal(); });
+  document.getElementById('settingsOverlay').addEventListener('click', (e)=>{ if(e.target.id==='settingsOverlay') closeSettings(); });
+
+  (async function init(){
+    buildBulbs();
+    await loadCoreNames();
+    renderLegend();
+    await renderCalendar();
+  })();
+</script>
+
+</body>
+</html>
